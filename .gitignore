@@ -1,0 +1,4 @@
+*.lst
+*.o
+main
+main-m
