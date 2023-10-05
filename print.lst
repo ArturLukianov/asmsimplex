@@ -1,0 +1,24 @@
+     1                                  section .text
+     2                                  	global print
+     3                                  
+     4                                  strlen:
+     5 00000000 4883C408                	add rsp, 8
+     6 00000004 488B442408              	mov rax, [rsp+8]
+     7                                  	strlen_beginloop:
+     8 00000009 803800                  	cmp byte [rax], 0
+     9 0000000C 7405                    	je  strlen_endloop
+    10 0000000E 48FFC0                  	inc rax
+    11 00000011 EBF6                    	jmp strlen_beginloop
+    12                                  	strlen_endloop:
+    13 00000013 482B442408              	sub rax, [rsp+8]
+    14 00000018 4883EC08                	sub rsp, 8
+    15 0000001C C3                      	ret 
+    16                                  
+    17                                  print:
+    18 0000001D E8DEFFFFFF              	call strlen
+    19 00000022 BF01000000              	mov rdi, 1         ; stdout
+    20 00000027 488B742408              	mov rsi, [rsp+8]   ; buffer
+    21 0000002C 4889C2                  	mov rdx, rax       ; size
+    22 0000002F B801000000              	mov rax, 1         ; write
+    23 00000034 0F05                    	syscall
+    24 00000036 C3                      	ret

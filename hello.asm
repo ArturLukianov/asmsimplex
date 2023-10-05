@@ -1,16 +1,15 @@
-	;       hello.asm
+; hello.asm
 	section .data
-	msg     db "hello, world", 0
+	msg     db "hello, world", 0Ah, 0
 
 	section .text
-  global _start
+	global _start
+
+extern print
 
 _start:
-	mov rax, 1
-	mov rdi, 1
-	mov rsi, msg
-	mov rdx, 12
-	syscall
+	push msg
+	call print
 	mov rax, 60
 	mov rdi, 0
 	syscall
