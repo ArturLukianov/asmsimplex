@@ -13,3 +13,4 @@ strlen:
 	sub rax, [rsp+8]
 	sub rsp, 8
 	ret
+

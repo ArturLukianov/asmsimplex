@@ -8,3 +8,5 @@ strings.o: strings.S
 	nasm -f elf64 strings.S -l strings.lst
 table.o: table.S
 	nasm -f elf64 table.S -l table.lst
+memory.o: memory.S
+	nasm -f elf64 memory.S -l memory.lst
