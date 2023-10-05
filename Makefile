@@ -1,8 +1,8 @@
-hello: hello.o print.o strings.o
-	ld -o hello hello.o print.o strings.o -no-pie -s -nostdlib --gc-sections -z noseparate-code
-hello.o: hello.asm
-	nasm -f elf64 hello.asm -l hello.lst
-print.o: print.asm
-	nasm -f elf64 print.asm -l print.lst
-strings.o: strings.asm
-	nasm -f elf64 strings.asm -l strings.lst
+main: main.o print.o strings.o
+	ld -o main main.o print.o strings.o -no-pie -s -nostdlib --gc-sections -z noseparate-code
+main.o: main.S
+	nasm -f elf64 main.S -l main.lst
+print.o: print.S
+	nasm -f elf64 print.S -l print.lst
+strings.o: strings.S
+	nasm -f elf64 strings.S -l strings.lst
