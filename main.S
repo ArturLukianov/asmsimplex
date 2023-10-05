@@ -8,8 +8,13 @@
 extern print
 extern get_by_index
 extern set_by_index
+extern set_table_size
 
 _start:
+  push 10
+  push 10
+  call set_table_size
+
   push 0
   push 0
   call get_by_index
