@@ -30,10 +30,6 @@ _start:
   ; push 0
   ; call get_by_index
 
-  push 5
-  push msg2
-  push msg
-
 	push msg
 	call print
 

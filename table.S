@@ -1,5 +1,5 @@
 section .bss
-  table resq 100 * 100
+  table resq 100 * 100 ;; array of 100*100 reals
   rows_count resq 1
   columns_count resq 1
   
