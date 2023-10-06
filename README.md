@@ -16,8 +16,8 @@ The output contains:
 ## STEP 1. Initialization
 ![Alt text](./other/obj_subj_functions.png)
 
-1.1 Reading data
-![Alt text](./other/image.png)
+1.1 Reading data<br>
+![Alt text](./other/image.png)<br>
 -4 -1 -4 0 0 0 1 <br>
 2 1 1 1 0 0<br>
 1 2 3 0 1 0<br>
@@ -29,7 +29,7 @@ The output contains:
 
 ## STEP 2. Check if the method is applicable
 [possible answer](https://math.stackexchange.com/questions/1314137/how-to-find-out-whether-a-linear-program-is-infeasible-using-the-simplex-algorit)
-![Alt text](./other/image6.png)
+![image6](./other/image6.png)
 $z_1 = c_{b1}*x1 + c_{b2}*x1$ <br>
 $z_2 = c_{b1}*x2 + c_{b2}*x2$ <br>
 ...
@@ -39,16 +39,16 @@ $${z_j - c_j < 0 \ after\  the\  last\ iteration\  => no\ solution}$$
 ## STEP 3. Iterate Until Optimal Solution
 ### Interation algorithm
 1. Select the most negative value in last row (*pivot column*)
-2. selecting *pivot row* by finding min ${b_{i}}/{x_{i}}$
+2. selecting *pivot row* by finding min ${b_{i}}/{x_{i}}$ <br>
 ![Alt text](./other/image-2.png)
 3. Make if needed pivot element to equal `1`
-4. Obtain zeros for all rest entries in pivot column by row operations.
+4. Obtain zeros for all rest entries in pivot column by row operations. <br>
 ![Alt text](./other/image3.png)
-5.  identify entering variable and exit variable at mean time
+5.  identify entering variable and exit variable at mean time <br>
 ![Alt text](./other/image5.png)
 6. if all values <= 0 => found optimal solution, so exti<br>
 otherwise, if we have negative and positive values, then we go to `1` step of algorithm
-6. max z value:
+6. max z value: <br>
 ![Alt text](./other/image4.png)
 
 ### Functions placeholders
