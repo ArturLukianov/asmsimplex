@@ -1,38 +1,29 @@
-; hello.asm
-	section .data
-	msg     db "hello, world", 0Ah, 0
-  msg2    db "HELLO, WORDL", 0Ah, 0
+section .data
+    msg     db "hello, world", 0Ah, 0
+    msg2    db "HELLO, WORDL", 0Ah, 0
+    ; SYS_READ equ 0
+    ; SYS_WRITE equ 1
+    ; SYS_EXIT equ 60
 
-	section .text
-	global _start
+section .text
+    global _start
 
 extern print
+extern readline
 extern memcpy
 extern get_by_index
 extern set_by_index
 extern set_table_size
 
 _start:
-  ; push 10
-  ; push 10
-  ; call set_table_size
+    push msg
+    call print
 
-  ; push 0
-  ; push 0
-  ; call get_by_index
+    call readline ; Call readline to read a line
 
-  ; push 0
-  ; push 0
-  ; push 100
-  ; call set_by_index
+    ; push line_buff
+    call print
 
-  ; push 0
-  ; push 0
-  ; call get_by_index
-
-	push msg
-	call print
-
-	mov rax, 60
-	mov rdi, 0
-	syscall
+    mov rax, 60
+    xor rdi, rdi
+    syscall

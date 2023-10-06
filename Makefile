@@ -1,4 +1,4 @@
-main: main.o print.o strings.o table.o
+main: main.o print.o input.o strings.o table.o 
 	ld -o main main.o print.o strings.o table.o -no-pie -s -nostdlib --gc-sections -z noseparate-code
 main.o: main.S
 	nasm -f elf64 main.S -l main.lst
@@ -10,3 +10,5 @@ table.o: table.S
 	nasm -f elf64 table.S -l table.lst
 memory.o: memory.S
 	nasm -f elf64 memory.S -l memory.lst
+input.o: input.S
+	nasm -f elf64 input.S -l input.lst
