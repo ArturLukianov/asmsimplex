@@ -31,6 +31,13 @@ memcpy:
 
 	ret
 
+;; Chunk structure:
+;; +------------+
+;; | CHUNK SIZE | QWORD
+;; +------------+
+;; | CHUNK DATA | LENGTH: SIZE - 8
+;;      ....
+;; 
 
 ;; malloc(uint64_t count)
 malloc:
