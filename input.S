@@ -7,6 +7,7 @@ section .bss
     line_buff resb 8
     farray resq 100
     char_buff resb 100
+    res resq 1  ; reserve 1 quadword(4 bytes) for result | 
 
 section .text
     global readline
@@ -36,6 +37,7 @@ read_line_into_float:
     push rbp
     mov rbp, rsp
 nextchar:
+    ; reading one char
     mov rax, 0              ; read
     mov rdi, 0              ; stdin
     mov rsi, char_buff      ; buff
@@ -50,11 +52,28 @@ nextchar:
     ; check if it's space
     cmp al, 20h
     je char_space
+
+    ; check if it's dot
+    cmp al, 2eh
+    je char_dot
+    ; check if it's minus
+    cmp al, 2dh
+    je char_minus
+
     inc rsi
     jmp nextchar
 char_space:
-    add r8, 1
+    inc r8
     inc rsi
+    jmp nextchar
+put_into_array:
+    mov [farray + r8*4 + r9], char_buff  ; base offset + base addr of next element + next number
+    jmp nextchar
+char_dot:
+    mov r8, -1
+    jmp nextchar
+char_minus:
+    fchs                ; change the sign
     jmp nextchar
 finished:
     pop rbp
