@@ -10,7 +10,7 @@ readline:
 nextchar:
     mov rax, 0
     mov rdx, 1         ; size_t count
-    mov rdi, 0         ; from stdin
+    mov rdi, 0         ; STDIN
     mov rsi, line_buff ; char *buf
     syscall
 
@@ -18,14 +18,12 @@ nextchar:
     mov al, [line_buff]
     cmp al, 0Ah
     je  end_of_line
-
+    
     ; Move to the next character in the buffer
-    inc rsi
+    inc rsi 
     jmp nextchar
-
 end_of_line:
-    ; Null-terminate the string
-    mov byte [rsi], 0
-
+    mov byte [rsi], 0 ; Null-terminate the string
+    mov rax, rsi
     pop rbp
     ret
