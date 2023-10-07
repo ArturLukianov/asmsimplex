@@ -39,7 +39,7 @@ $z_i = c_{b1}*xi + c_{b2}*xi$ <br>
 $${z_j - c_j < 0 \ after\  the\  last\ iteration\  => no\ solution}$$
 
 ## STEP 3. Iterate Until Optimal Solution
-### Interation algorithm
+### Iteration algorithm
 1. Select the most negative value in last row (*pivot column*)
 2. selecting *pivot row* by finding min ${b_{i}}/{x_{i}}$ <br>
 ![image-2](./other/image-2.png)
