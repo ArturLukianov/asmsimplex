@@ -6,7 +6,7 @@
 	global _start
 
 extern print
-
+extern print_float
 
 extern memcpy
 extern malloc
@@ -52,6 +52,23 @@ _start:
 
   push rax
   call read_line_into_float
+
+  ; push 5
+  ; push msg
+  ; push rax
+  ; call memcpy
+
+  ; pop  rax
+  ; push rax
+	; push rax
+	; call print
+
+  ; pop rax
+  ; call free
+
+  ; mov rax, 0x40C9A23CCCCCCCCD
+  push rax
+  call print_float
 
 	mov rax, 60
 	mov rdi, 0
