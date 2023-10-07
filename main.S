@@ -1,7 +1,6 @@
 section .data
     msg     db "hello, world", 0Ah, 0
     msg2    db "HELLO, WORDL", 0Ah, 0
-    
 section .text
     global _start
 
@@ -16,8 +15,10 @@ _start:
     push msg
     call print
     
+    push line_buff
     call readline ; reading line :/
-    
+    ; mov line_buff, rax
+
     push rax
     call print
 
