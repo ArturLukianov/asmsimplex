@@ -4,10 +4,10 @@ section .data
     integer times 4 db 0
     
 section .bss
-    line_buff resb 8
-    farray resq 100
-    char_buff resb 100
-    res resq 1  ; reserve 1 quadword(4 bytes) for result | 
+    line_buff RESB 8
+    farray RESQ 100
+    fvalue RESQ 1  ; reserve 1 quadword(4 bytes) for result | 
+    char_buff RESB 100
 
 section .text
     global readline
@@ -15,7 +15,11 @@ section .text
     global read_line_into_float
     extern scanf
 
-
+extern strlen
+extern malloc
+extern free
+extern memcpy
+extern memcpy_reverse
 ;; Read untill '\n'
 ;; writes result string in rax
 readline:
@@ -36,6 +40,10 @@ readline:
 read_line_into_float:
     push rbp
     mov rbp, rsp
+    push 80
+	call malloc
+    ; mov rbx, rax
+    fld QWORD [rax]         ; loading float point value into the stack
 nextchar:
     ; reading one char
     mov rax, 0              ; read
@@ -45,30 +53,36 @@ nextchar:
     syscall
 
     ; check if it's line feed
-    mov al, [char_buff]
-    cmp al, 0Ah
+    mov rax, [char_buff]
+    cmp rax, 0Ah
     je finished
 
     ; check if it's space
-    cmp al, 20h
+    cmp rax, 20h
     je char_space
 
     ; check if it's dot
-    cmp al, 2eh
+    cmp rax, 2eh
     je char_dot
     ; check if it's minus
-    cmp al, 2dh
+    cmp rax, 2dh
     je char_minus
 
+    ; GET INT FROM ASCII
+    sub rax, '0'
+    ; mov fvalue, rax
+    ; fld fvalue
+    ; movss xmm0, [fvalue]
     inc rsi
     jmp nextchar
 char_space:
+    jmp put_into_array
     inc r8
     inc rsi
     jmp nextchar
 put_into_array:
-    mov [farray + r8*4 + r9], char_buff  ; base offset + base addr of next element + next number
-    jmp nextchar
+    mov QWORD [farray + r8*4 + r9], char_buff  ; [base offset + base addr of next element + next number] = char_buff[some index:)]
+    ret
 char_dot:
     mov r8, -1
     jmp nextchar

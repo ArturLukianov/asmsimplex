@@ -67,8 +67,8 @@ _start:
   ; call free
 
   ; mov rax, 0x40C9A23CCCCCCCCD
-  push rax
-  call print_float
+  ; push rax
+  ; call print_float
 
 	mov rax, 60
 	mov rdi, 0
