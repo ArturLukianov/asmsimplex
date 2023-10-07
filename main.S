@@ -11,10 +11,10 @@ extern print
 extern memcpy
 extern malloc
 extern free
-
 extern get_by_index
 extern set_by_index
 extern set_table_size
+extern read_line_into_float
 
 _start:
   ; push 10
@@ -34,21 +34,24 @@ _start:
   ; push 0
   ; call get_by_index
 
-  push 16
-  call malloc
+  ; push 16
+  ; call malloc
 
-  push 5
-  push msg
+  ; push 5
+  ; push msg
+  ; push rax
+  ; call memcpy
+
+  ; pop  rax
+  ; push rax
+	; push rax
+	; call print
+
+  ; pop rax
+  ; call free
+
   push rax
-  call memcpy
-
-  pop  rax
-  push rax
-	push rax
-	call print
-
-  pop rax
-  call free
+  call read_line_into_float
 
 	mov rax, 60
 	mov rdi, 0
