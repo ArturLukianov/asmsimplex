@@ -1,13 +1,16 @@
 ; hello.asm
 	section .data
 	msg     db "hello, world", 0Ah, 0
-  msg2    db "HELLO, WORDL", 0Ah, 0
 
 	section .text
 	global _start
 
 extern print
+
 extern memcpy
+extern malloc
+extern free
+
 extern get_by_index
 extern set_by_index
 extern set_table_size
@@ -30,8 +33,21 @@ _start:
   ; push 0
   ; call get_by_index
 
-	push msg
+  push 16
+  call malloc
+
+  push 5
+  push msg
+  push rax
+  call memcpy
+
+  pop  rax
+  push rax
+	push rax
 	call print
+
+  pop rax
+  call free
 
 	mov rax, 60
 	mov rdi, 0

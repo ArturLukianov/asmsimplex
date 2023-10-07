@@ -1,26 +1,75 @@
 section .text
 	global memcpy
+	global malloc
+	global free
 
 ;; memcpy(void* dst, void* src, uint64_t count)
 ;; > dst   (rdx)
 ;;   src   (rcx)
-;;   count ([rbp-0x8])
+;;   count (r8)
 memcpy:
 	push rbp
 	mov  rbp, rsp
 
-	mov  rcx, [rbp+0x20]
-	mov  [rbp-0x08], rcx
+	mov  r8, [rbp+0x20]
 	mov  rcx, [rbp+0x18]
 	mov  rdx, [rbp+0x10]
 	xor  rax, rax
 	memcpy_loop_begin:
-	cmp  rax, 
+	cmp  rax, r8
 	jge  memcpy_loop_end
-	mov rbx, [rcx]
-	mov [rdx], rbx
-	inc rcx
-	inc rdx
-	inc rax
+	mov  bl, [rcx]
+	mov  [rdx], bl
+	inc  rcx
+	inc  rdx
+	inc  rax
+	jmp  memcpy_loop_begin
 	memcpy_loop_end:
+
+	mov rsp, rbp
+	pop rbp
+
+	ret
+
+
+;; malloc(uint64_t count)
+malloc:
+	push rbp
+	mov rbp, rsp
+
+	; Call mmap
+	mov rdi, 0x00
+	add QWORD [rbp+0x10], 8
+	mov rsi, QWORD [rbp+0x10] ; SIZE
+	mov rdx, 0x03 ; READ|WRITE
+	mov r10, 0x22 ; MAP_ANONYMOUS|MAP_PRIVATE
+	mov r8,  -1   ; fd
+	mov r9,  0x00 ; offset
+	mov rax, 0x09	; mmap
+	syscall
+	mov rdx, QWORD [rbp+0x10]
+	mov QWORD [rax], rdx
+	add rax, 0x08
+
+	mov rsp, rbp
+	pop rbp
+
+	ret
+
+;; free(void* ptr)
+free:
+	push rbp
+	mov rbp, rsp
+
+	mov rdi, QWORD [rbp+0x10] ; ptr
+	sub rdi, 8
+
+	mov rsi, QWORD [rdi] ; size
+	
+	mov rax, 0x0B	; munmap
+	syscall
+
+	mov rsp, rbp
+	pop rbp
+
 	ret
