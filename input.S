@@ -47,13 +47,14 @@ nextchar:
     cmp al, 0Ah
     je finished
 
-    inc rsi
     ; check if it's space
-    cmp al, 0
+    cmp al, 20h
     je char_space
+    inc rsi
     jmp nextchar
 char_space:
-    mov r8, 0
+    add r8, 1
+    inc rsi
     jmp nextchar
 finished:
     pop rbp
