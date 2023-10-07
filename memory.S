@@ -1,7 +1,39 @@
 section .text
 	global memcpy
+	global memcpy_reverse
+
 	global malloc
 	global free
+
+;; memcpy_reverse(void* dst, void* src, uint64_t count)
+;; > dst   (rdx)
+;;   src   (rcx)
+;;   count (r8)
+memcpy_reverse:
+	push rbp
+	mov  rbp, rsp
+
+	mov  r8, [rbp+0x20]
+	mov  rcx, [rbp+0x18]
+	mov  rdx, [rbp+0x10]
+	add  rcx, r8
+	dec  rcx
+	xor  rax, rax
+	memcpy_reverse_loop_begin:
+	cmp  rax, r8
+	jge  memcpy_reverse_loop_end
+	mov  bl, [rcx]
+	mov  [rdx], bl
+	dec  rcx
+	inc  rdx
+	inc  rax
+	jmp  memcpy_reverse_loop_begin
+	memcpy_reverse_loop_end:
+
+	mov rsp, rbp
+	pop rbp
+
+	ret
 
 ;; memcpy(void* dst, void* src, uint64_t count)
 ;; > dst   (rdx)
