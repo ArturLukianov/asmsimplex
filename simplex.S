@@ -21,8 +21,8 @@ extern print_float
 ; void check_b_positive(int m) rdi = m
 check_b_positive:
   push rbp
-  mov rbp, rsp
   push r9
+  mov rbp, rsp
   ; mov rax, rdi        ; Copy m to rax
   ; mov rdi, rsi      ; Copy mat to rdi
 
@@ -40,7 +40,7 @@ check_loop:
   pop  r8
   pop  rcx
   
-  mov [rbp+0x10], rax
+  mov [rbp+0x10], rax   ; r9 = table[i][0]
   fld QWORD [rbp+0x10]  ; Load table[i][0] into st0
   fld QWORD [FLOAT_ZERO] ; loading zero
 

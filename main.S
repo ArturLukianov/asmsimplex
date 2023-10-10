@@ -64,7 +64,6 @@ _start:
 
   call print_table
 
-debug_simplex_label:
   mov rdi, 3
   call check_b_positive
   ; mov rdi, 3
