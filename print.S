@@ -5,6 +5,7 @@ section .data
 section .text
 	global print
 	global print_float
+	global print_int
 	global putchar
 
 extern strlen
@@ -12,6 +13,16 @@ extern malloc
 extern free
 extern memcpy
 extern memcpy_reverse
+
+%macro prologue 0
+	push rbp
+	mov  rbp, rsp
+%endmacro
+
+%macro epilogue 0
+	mov  rsp, rbp
+	pop  rbp
+%endmacro
 
 print:
 	call strlen
@@ -175,6 +186,51 @@ print_float:
 	mov rsp, rbp
 	pop rbp
 	ret
+
+; void print_int(int64: rax)
+print_int:
+	prologue
+	mov  rbx, rax
+	push 256
+	call malloc
+
+	xor  rsi, rsi
+	mov  r8, rax
+	mov  rax, rbx
+	mov  rcx, 10
+
+	print_int_loop:
+		xor rdx, rdx
+		div rcx
+		add rdx, 0x30
+
+		mov BYTE [r8+rsi], dl
+		inc rsi
+
+		cmp rax, 0
+		je print_int_end
+		jmp print_int_loop
+
+	print_int_end:
+
+	push r8
+	push rsi
+	push 256
+	call malloc
+	pop rsi
+	pop rsi
+	pop r8
+
+	push rsi
+	push r8
+	push rax
+	call memcpy_reverse
+	call print
+	call free
+	pop rax
+	call free
+
+	epilogue
 
 putchar:
 	push rax
