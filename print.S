@@ -113,7 +113,7 @@ print_float:
 	pop rdx
 	lea r8, [rdx+0x30]
 	mov BYTE [r9], r8b
-	cmp QWORD [rbp-0x09], 15
+	cmp QWORD [rbp-0x09], 6
 	jge print_float_frac_loop_end
 	ftst
 	inc r9
