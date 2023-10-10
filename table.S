@@ -108,6 +108,8 @@ print_table:
       call get_by_index
       pop  r9
       pop  r8
+      
+      push rax
       call print_float
 
       mov rax, 20h
