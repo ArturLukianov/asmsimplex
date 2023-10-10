@@ -53,6 +53,9 @@ _start:
   push rax
   call read_line_into_float
 
+  push rax
+  call print_float
+
   ; push 5
   ; push msg
   ; push rax
