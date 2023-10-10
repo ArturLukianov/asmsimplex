@@ -39,13 +39,13 @@ input_table:
   call set_by_index
 
   inc r10
-  test r10, 3
+  cmp r10, 4
   jz input_table_next_row
   jmp input_table
 
 input_table_next_row:
   inc r13
-  test r10, 3
+  cmp r10, 4
   jz input_table_end
   jmp input_table
 
