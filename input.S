@@ -1,19 +1,8 @@
-section .data
-    format db "%.1f", 0
-    some_float db "2.342145", 0
-    integer times 4 db 0
-    
 section .bss
-    line_buff RESB 8
-    farray RESQ 100
-    fvalue RESQ 1  ; reserve 1 quadword(4 bytes) for result | 
-    char_buff RESB 100
+    char_buff RESB 1
 
 section .text
-    global readline
     global read_float
-    global read_line_into_float
-    extern scanf
 
 extern strlen
 extern malloc
@@ -21,30 +10,14 @@ extern free
 extern memcpy
 extern memcpy_reverse
 
-;; Read untill '\n'
-;; writes result string in rax
-readline:
-    push rbp
-    mov rbp, rsp
-
-    mov rax, 0          ; read
-    mov rdx, 512        ; size_t count | 512 - randomly picked value 
-    mov rdi, 0          ; STDIN 
-    mov rsi, line_buff  ; char *buf
-    syscall
-
-    mov rax, line_buff  ; saving it
-    pop rbp
-    ret
-
-; reading string and then converting all ascii -> int -> double
-read_line_into_float:
+;; Read float from stdin to RAX
+read_float:
     push rbp
     mov rbp, rsp
 
     fldz
 
-integer_part_input:
+integer_part_input: ; Input part before dot (integer part)
     xor rax, rax          
     xor rdi, rdi           
     mov rsi, char_buff      
@@ -86,13 +59,13 @@ integer_part_input:
     inc rsi
     jmp integer_part_input
 
-char_dot:
+char_dot: ; If we found dot, switch to inputing decimal part
     xor r9, r9
     inc r9
 
     jmp fractional_part_input
 
-char_minus:
+char_minus: ;; TODO: now forces to have minus after number, not before
     fchs                ; change the sign
     jmp integer_part_input
 

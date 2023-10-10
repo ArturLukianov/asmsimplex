@@ -15,7 +15,7 @@ extern free
 extern get_by_index
 extern set_by_index
 extern init_table
-extern read_line_into_float
+extern read_float
 
 _start:
   push 3
@@ -31,7 +31,7 @@ _start:
 ; xN
 ; z
 input_table:
-  call read_line_into_float
+  call read_float
 
   push r10
   push r13
