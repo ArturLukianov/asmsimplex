@@ -1,5 +1,6 @@
 section .text
     global read_float
+    global read_int
 
 extern strlen
 extern malloc
@@ -123,4 +124,30 @@ read_line_into_float_end:
     read_float_return:
     mov rsp, rbp
     pop rbp
+    ret
+
+read_int:
+    push rbp
+    mov  rbp, rsp
+    
+    xor  rbx, rbx
+    xor  rax, rax
+
+    read_int_loop:
+        call getchar
+        cmp  al, 0Ah
+        je   read_int_end
+        cmp  al, 20h
+        je   read_int_end
+        
+        sub  al, 0x30
+
+        imul rbx, 10
+        add  rbx, rax
+        jmp  read_int_loop
+
+    read_int_end:
+    mov  rax, rbx
+    mov  rsp, rbp
+    pop  rbp
     ret

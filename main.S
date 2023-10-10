@@ -1,10 +1,14 @@
 ; hello.asm
+section .data
+  enterVarNum db "Enter number of variables: ", 0
+
 	section .text
 	global _start
 
 ; print.S
 extern print
 extern print_float
+extern print_int
 extern putchar
 ; memory.S
 extern memcpy
@@ -18,10 +22,23 @@ extern print_table
 
 ; input.S
 extern read_float
+extern read_int
+
+%macro print 1
+  push %1
+  call print
+  sub  rsp, 8
+%endmacro
 ; simple.S
 extern check_b_positive
 
 _start:
+  print enterVarNum
+  call read_int
+  call print_int
+
+  jmp exit
+
   push 3
   push 3
   call init_table
@@ -40,7 +57,6 @@ input_table:
   push r10
   push r13
   push rax
-  debug_label:
   call set_by_index
 
   inc r10
@@ -63,6 +79,7 @@ debug_simplex_label:
   ; mov rdi, 3
   ; call check_b_positive
 
+exit:
 	mov rax, 60
 	mov rdi, 0
 	syscall ; exit(0)
