@@ -9,9 +9,12 @@ extern putchar
 extern memcpy
 extern malloc
 extern free
+
 extern get_by_index
 extern set_by_index
 extern init_table
+extern print_table
+
 extern read_float
 
 _start:
@@ -46,6 +49,8 @@ input_table_next_row:
   jmp input_table
 
 input_table_end:
+
+  call print_table
 
 	mov rax, 60
 	mov rdi, 0
