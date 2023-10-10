@@ -15,6 +15,7 @@ section .text
   global input_table_1
   global input_table_2
   global input_table_3
+  global find_pivot_column
 
 extern malloc
 
@@ -272,5 +273,47 @@ input_table_3:
     inc r10
     cmp r10, [var_num]
     jne input_table_C
+
+  epilogue
+
+;; int find_pivot_column()
+find_pivot_column:
+  prologue
+  sub rsp, 0x10
+  xor r8, r8
+
+  push 0
+  push QWORD [con_num]
+  call get_by_index
+  mov [rbp-0x08], rax
+
+  xor r10, r10
+  find_pivot_column_loop:
+    mov  r11, r10
+    add  r11, [con_num]
+    push r10
+    push r11
+    call get_by_index
+    pop  r11
+    pop  r10
+
+    push QWORD [rsp-0x08]
+    fld  QWORD [rsp]
+    pop  rbx
+    push rax
+    fld  QWORD [rsp]
+    pop  rax
+
+    fcomp
+    jg find_pivot_column_loop_greater
+    mov rbx, rax
+    mov r8, r10
+    find_pivot_column_loop_greater:
+
+    inc r10
+    cmp r10, [var_num]
+    jne find_pivot_column_loop
+
+  mov rax, r8
 
   epilogue

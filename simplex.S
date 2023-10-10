@@ -7,6 +7,17 @@ section .text
 extern get_by_index
 extern print_float
 
+%macro prologue 0
+  push rbp
+  mov  rbp, rsp
+%endmacro
+
+%macro epilogue 0
+  mov  rsp, rbp
+  pop  rbp
+  ret
+%endmacro
+
 ; void check_b_positive(int m) rdi = m
 check_b_positive:
   push rbp
