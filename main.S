@@ -18,33 +18,6 @@ extern print_table
 extern read_float
 
 _start:
-  ; call read_float
-  ; call read_float
-  ; call read_float
-  ; push rax
-  ; call print_float
-  ; mov  rax, 0Ah
-  ; call putchar
-  ; call read_float
-  ; push rax
-  ; call print_float
-  ; mov  rax, 0Ah
-  ; call putchar
-  ; call read_float
-  ; push rax
-  ; call print_float
-  ; mov  rax, 0Ah
-  ; call putchar
-  ; call read_float
-  ; push rax
-  ; call print_float
-  ; mov  rax, 0Ah
-  ; call putchar
-  ; call read_float
-  ; push rax
-  ; call print_float
-  ; mov  rax, 0Ah
-  ; call putchar
   push 3
   push 3
   call init_table
