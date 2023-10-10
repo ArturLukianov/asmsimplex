@@ -1,6 +1,3 @@
-section .bss
-    char_buff RESB 1
-
 section .text
     global read_float
 
@@ -18,17 +15,17 @@ read_float:
     fldz
 
 integer_part_input: ; Input part before dot (integer part)
+    sub rsp, 0x8
     xor rax, rax          
     xor rdi, rdi           
-    mov rsi, char_buff      
+    mov rsi, rsp      
     xor rdx, rdx
     inc rdx
     syscall ; read(stdin, buff, 1)
 
-    xor r12, r12
+    pop r12
 
     ; check if it's line feed
-    mov r12b, byte [char_buff]
     cmp r12b, 0Ah
     je read_line_into_float_end
 
@@ -70,15 +67,16 @@ char_minus: ;; TODO: now forces to have minus after number, not before
     jmp integer_part_input
 
 fractional_part_input: ; Input the part after the dot
+    sub rsp, 0x8
     xor rax, rax          
     xor rdi, rdi           
-    mov rsi, char_buff      
+    mov rsi, rsp      
     xor rdx, rdx
     inc rdx
     syscall ; read(stdin, buff, 1)
 
     ; check if it's line feed
-    mov r12b, byte [char_buff]
+    pop r12
     cmp r12b, 0Ah
     je fractional_part_input_end
 

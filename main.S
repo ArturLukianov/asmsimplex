@@ -1,7 +1,4 @@
 ; hello.asm
-	section .data
-	msg     db "hello, world", 0Ah, 0
-
 	section .text
 	global _start
 
