@@ -1,7 +1,6 @@
 main: main.o print.o strings.o table.o memory.o input.o
 # 	ld -o main main.o print.o strings.o table.o memory.o input.o -no-pie -s -nostdlib --gc-sections -z noseparate-code
 	ld -o main main.o print.o strings.o table.o memory.o input.o
->>>>>>> f4275e8 (print_table)
 main.o: main.S
 	nasm -f elf64 main.S -l main.lst
 print.o: print.S
