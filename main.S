@@ -2,20 +2,24 @@
 	section .text
 	global _start
 
+; print.S
 extern print
 extern print_float
 extern putchar
-
+; memory.S
 extern memcpy
 extern malloc
 extern free
-
+; table.S
 extern get_by_index
 extern set_by_index
 extern init_table
 extern print_table
 
+; input.S
 extern read_float
+; simple.S
+extern check_b_positive
 
 _start:
   push 3
@@ -54,6 +58,10 @@ input_table_next_row:
 input_table_end:
 
   call print_table
+
+debug_simplex_label:
+  ; mov rdi, 3
+  ; call check_b_positive
 
 	mov rax, 60
 	mov rdi, 0
