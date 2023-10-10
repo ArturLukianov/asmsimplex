@@ -167,6 +167,11 @@ print_float:
 	jmp print_float_end
 
 	print_float_end:
+
+	push rax
+	fstp QWORD [rsp]
+	fstp QWORD [rsp]
+
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -180,8 +185,3 @@ putchar:
 	syscall
 	pop rax
 	ret
-
-
-;; print_table()
-;; 
-print_table:

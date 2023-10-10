@@ -48,10 +48,9 @@ get_by_index:
 
   mov rdx, [columns_count]
   imul rbx, rdx
-  shr rbx, 3
   add rbx, rax
 
-  mov rax, [r12 + rbx]; rax = *(table + (row * columns_count) * 8 + column)
+  mov rax, [r12 + rbx * 8]; rax = *(table + (row * columns_count) * 8 + column)
 
   mov rsp, rbp
   pop rbp
@@ -72,10 +71,9 @@ set_by_index:
 
   mov rdx, [columns_count]
   imul rbx, rdx
-  shr rbx, 3
   add rbx, rax
 
-  mov [r12 + rbx], rcx
+  mov [r12 + rbx * 8], rcx
 
   mov rsp, rbp
   pop rbp
@@ -106,11 +104,16 @@ print_table:
       push r9
       push r8
       call get_by_index
-      pop  r9
       pop  r8
-      
+      pop  r9
+
+      push r9
+      push r8
       push rax
       call print_float
+      pop  rax
+      pop  r8
+      pop  r9
 
       mov rax, 20h
       call putchar

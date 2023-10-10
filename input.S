@@ -7,23 +7,46 @@ extern free
 extern memcpy
 extern memcpy_reverse
 
+getchar:
+    push rbp
+    mov  rbp, rsp
+
+    push QWORD 0
+    
+    mov  rax, 0
+    mov  rdi, 0
+    mov  rsi, rsp  ; 
+    mov  rdx, 1    ; size
+    syscall
+
+    pop  rax
+
+    mov  rsp, rbp
+    pop  rbp
+    ret
+
 ;; Read float from stdin to RAX
 read_float:
     push rbp
     mov rbp, rsp
 
     fldz
+    sub rsp, 0x8
+
+    call getchar
+    mov  r12, rax
+
+    xor r14b, r14b
+
+    cmp r12b, '-'
+    jne integer_part_input_skip
+    inc r14b
+    jmp integer_part_input
 
 integer_part_input: ; Input part before dot (integer part)
-    sub rsp, 0x8
-    xor rax, rax          
-    xor rdi, rdi           
-    mov rsi, rsp      
-    xor rdx, rdx
-    inc rdx
-    syscall ; read(stdin, buff, 1)
-
-    pop r12
+    call getchar
+    mov  r12, rax
+    integer_part_input_skip:
 
     ; check if it's line feed
     cmp r12b, 0Ah
@@ -36,10 +59,6 @@ integer_part_input: ; Input part before dot (integer part)
     ; check if it's dot
     cmp r12b, 2eh
     je char_dot
-
-    ; check if it's minus
-    cmp r12b, 2dh
-    je char_minus
 
     ; Process digit
     push 10
@@ -62,21 +81,11 @@ char_dot: ; If we found dot, switch to inputing decimal part
 
     jmp fractional_part_input
 
-char_minus: ;; TODO: now forces to have minus after number, not before
-    fchs                ; change the sign
-    jmp integer_part_input
-
 fractional_part_input: ; Input the part after the dot
-    sub rsp, 0x8
-    xor rax, rax          
-    xor rdi, rdi           
-    mov rsi, rsp      
-    xor rdx, rdx
-    inc rdx
-    syscall ; read(stdin, buff, 1)
+    call getchar
+    mov  r12, rax
 
     ; check if it's line feed
-    pop r12
     cmp r12b, 0Ah
     je fractional_part_input_end
 
@@ -105,15 +114,13 @@ fractional_part_input_end:
 read_line_into_float_end:
     fstp QWORD [rsp]
     pop rax
+    cmp r14b, 1
+    jne read_float_return
 
+    mov r9, 0x8000000000000000
+    or rax, r9
+
+    read_float_return:
     mov rsp, rbp
-    pop rbp
-    ret
-
-    mov rax, r12
-
-    push rbp
-    mov rbp, rsp
-
     pop rbp
     ret

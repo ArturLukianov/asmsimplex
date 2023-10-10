@@ -18,6 +18,33 @@ extern print_table
 extern read_float
 
 _start:
+  ; call read_float
+  ; call read_float
+  ; call read_float
+  ; push rax
+  ; call print_float
+  ; mov  rax, 0Ah
+  ; call putchar
+  ; call read_float
+  ; push rax
+  ; call print_float
+  ; mov  rax, 0Ah
+  ; call putchar
+  ; call read_float
+  ; push rax
+  ; call print_float
+  ; mov  rax, 0Ah
+  ; call putchar
+  ; call read_float
+  ; push rax
+  ; call print_float
+  ; mov  rax, 0Ah
+  ; call putchar
+  ; call read_float
+  ; push rax
+  ; call print_float
+  ; mov  rax, 0Ah
+  ; call putchar
   push 3
   push 3
   call init_table
@@ -36,17 +63,19 @@ input_table:
   push r10
   push r13
   push rax
+  debug_label:
   call set_by_index
 
   inc r10
-  cmp r10, 4
-  jz input_table_next_row
+  cmp r10, 3
+  je input_table_next_row
   jmp input_table
 
 input_table_next_row:
   inc r13
-  cmp r10, 4
-  jz input_table_end
+  xor r10, r10
+  cmp r13, 3
+  je input_table_end
   jmp input_table
 
 input_table_end:
