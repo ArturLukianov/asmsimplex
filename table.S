@@ -230,10 +230,7 @@ input_table_1:
   
   inc r11
   mov  rax, 0x3ff0000000000000
-  push r11
-  push r10
-  push rax
-  call set_by_index
+  set r11, r10, rax
 
   epilogue
 
@@ -299,6 +296,7 @@ find_pivot_column:
   mov r12, rax
 
   xor r10, r10
+  inc r10
   find_pivot_column_loop:
     mov  r11, [con_num]
     ; push r10
@@ -315,10 +313,13 @@ find_pivot_column:
     pop  rbx
     push rax
     fld  QWORD [rsp]
-    pop  rax
 
     fcompp
-    jbe find_pivot_column_loop_less
+    FSTSW AX
+    SAHF
+    pop rax
+
+    jae find_pivot_column_loop_less
     mov r12, rax
     mov r8, r10
     find_pivot_column_loop_less:
