@@ -33,11 +33,11 @@ extern read_int
 extern check_b_positive
 
 _start:
-  print enterVarNum
-  call read_int
-  call print_int
+  ; print enterVarNum
+  ; call read_int
+  ; call print_int
 
-  jmp exit
+  ; jmp exit
 
   push 3
   push 3
@@ -76,8 +76,8 @@ input_table_end:
   call print_table
 
 debug_simplex_label:
-  ; mov rdi, 3
-  ; call check_b_positive
+  mov rdi, 3
+  call check_b_positive
 
 exit:
 	mov rax, 60
