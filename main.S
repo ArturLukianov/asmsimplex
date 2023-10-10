@@ -7,6 +7,7 @@
 
 extern print
 extern print_float
+extern putchar
 
 extern memcpy
 extern malloc
