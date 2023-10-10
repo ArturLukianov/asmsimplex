@@ -13,66 +13,42 @@ extern malloc
 extern free
 extern get_by_index
 extern set_by_index
-extern set_table_size
+extern init_table
 extern read_line_into_float
 
 _start:
-  ; push 10
-  ; push 10
-  ; call set_table_size
+  push 3
+  push 3
+  call init_table
 
-  ; push 0
-  ; push 0
-  ; call get_by_index
+  mov r10, 3
+  mov r13, 3
 
-  ; push 0
-  ; push 0
-  ; push 100
-  ; call set_by_index
-
-  ; push 0
-  ; push 0
-  ; call get_by_index
-
-  ; push 16
-  ; call malloc
-
-  ; push 5
-  ; push msg
-  ; push rax
-  ; call memcpy
-
-  ; pop  rax
-  ; push rax
-	; push rax
-	; call print
-
-  ; pop rax
-  ; call free
-
-  push rax
+;; Input format:
+; C
+; x1
+; xN
+; z
+input_table:
   call read_line_into_float
 
+  push r10
+  push r13
   push rax
-  call print_float
+  call set_by_index
 
-  ; push 5
-  ; push msg
-  ; push rax
-  ; call memcpy
+  dec r10
+  jz input_table_next_row
+  jmp input_table
 
-  ; pop  rax
-  ; push rax
-	; push rax
-	; call print
+input_table_next_row:
+  dec r13
+  mov r10, 3
+  jz input_table_end
+  jmp input_table
 
-  ; pop rax
-  ; call free
-
-  ; mov rax, 0x40C9A23CCCCCCCCD
-  ; push rax
-  ; call print_float
+input_table_end:
 
 	mov rax, 60
 	mov rdi, 0
-	syscall
+	syscall ; exit(0)

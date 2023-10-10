@@ -1,18 +1,19 @@
 section .bss
-  table resq 100 * 100 ;; array of 100*100 reals
-  rows_count resq 1
+  table resq 1 ; Pointer to table (it takes less mem to save it here than to use .bss segment)
+  rows_count resq 1 
   columns_count resq 1
   
 section .text
   global get_by_index
   global set_by_index
-  global set_table_size
+  global init_table
 
+extern malloc
 
-;; Initialize table size
+;; Initialize table 
 ;; > columns_count
 ;;   rows_count
-set_table_size:
+init_table:
   push rbp
   mov rbp, rsp
   mov rax, [rbp+0x10] ; Column count
@@ -20,6 +21,11 @@ set_table_size:
 
   mov [columns_count], rax
   mov [rows_count], rbx
+
+  imul rax, rbx
+  push rax
+  call malloc
+  mov [table], rax
 
   mov rsp, rbp
   pop rbp
@@ -34,12 +40,14 @@ get_by_index:
 	mov rax, [rbp+0x10] ; Column
 	mov rbx, [rbp+0x18] ; Row
 
+  mov r12, [table] ; Load table address
+
   mov rdx, [columns_count]
   imul rbx, rdx
   shr rbx, 3
   add rbx, rax
 
-  mov rax, [table + rbx]; rax = *(table + (row * columns_count) * 8 + column)
+  mov rax, [r12 + rbx]; rax = *(table + (row * columns_count) * 8 + column)
 
   mov rsp, rbp
   pop rbp
@@ -56,12 +64,14 @@ set_by_index:
 	mov rax, [rbp+0x18] ; Column
 	mov rbx, [rbp+0x20] ; Row
 
+  mov r12, [table] ; Load table address
+
   mov rdx, [columns_count]
   imul rbx, rdx
   shr rbx, 3
   add rbx, rax
 
-  mov [table + rbx], rcx
+  mov [r12 + rbx], rcx
 
   mov rsp, rbp
   pop rbp
