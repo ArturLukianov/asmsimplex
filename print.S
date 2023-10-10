@@ -5,6 +5,7 @@ section .data
 section .text
 	global print
 	global print_float
+	global putchar
 
 extern strlen
 extern malloc
@@ -169,3 +170,18 @@ print_float:
 	mov rsp, rbp
 	pop rbp
 	ret
+
+putchar:
+	push rax
+	mov rdi, 1         ; stdout
+	mov rsi, rsp-1     ; buffer
+	mov rdx, 1         ; size
+	mov rax, 1         ; write
+	syscall
+	pop rax
+	ret
+
+
+;; print_table()
+;; 
+print_table:

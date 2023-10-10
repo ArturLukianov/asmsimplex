@@ -7,6 +7,7 @@
 
 extern print
 extern print_float
+extern putchar
 
 extern memcpy
 extern malloc
@@ -50,11 +51,11 @@ _start:
   ; pop rax
   ; call free
 
-  push rax
-  call read_line_into_float
+  ; push rax
+  ; call read_line_into_float
 
-  push rax
-  call print_float
+  ; push rax
+  ; call print_float
 
   ; push 5
   ; push msg
