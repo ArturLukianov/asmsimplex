@@ -28,6 +28,9 @@ The output contains:
 > Combine the objective function coefficients (C), constraint coefficients (A), and right-hand side values (b) to form the initial tableau.
 
 ## STEP 2. Check if the method is applicable
+CHECK ONLY THIS:
+all b_i > 0
+
 [possible answer](https://math.stackexchange.com/questions/1314137/how-to-find-out-whether-a-linear-program-is-infeasible-using-the-simplex-algorit) <br>
 
 ![image6](./other/image6.png)
