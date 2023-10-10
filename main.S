@@ -64,8 +64,7 @@ _start:
 
   call print_table
 
-  mov rdi, 3
-  call check_b_positive
+debug_simplex_label:
   ; mov rdi, 3
   ; call check_b_positive
   call find_pivot_column

@@ -37,6 +37,19 @@ extern read_float
   ret
 %endmacro
 
+%macro set 3
+  push %2
+  push %1
+  push %3
+  call set_by_index
+%endmacro
+
+%macro get 2
+  push %2
+  push %1
+  call get_by_index
+%endmacro
+
 ;; Initialize table 
 ;; > columns_count
 ;;   rows_count
@@ -129,11 +142,9 @@ print_table:
     cmp r9b, [columns_count]
     je print_table_print_cell_end
 
-      push r9
-      push r8
-      call get_by_index
-      pop  r8
+      get r9, r8
       pop  r9
+      pop  r8
 
       push r9
       push r8
@@ -183,10 +194,7 @@ input_table_1:
 ; ; z
   input_table_A:
     call read_float
-    push r10
-    push r13
-    push rax
-    call set_by_index
+    set r10, r13, rax
 
     inc r10
     cmp r10, [var_num]
@@ -207,14 +215,15 @@ input_table_1:
   input_table_S:
     mov r11, r10
     add r11, [var_num]
-    push r11
-    push r10
     mov  rax, 0x3ff0000000000000
-    push rax
-    call set_by_index
+    ; push r10
+    ; push r11
+    ; push rax
+    ; call set_by_index
+    set r11, r10, rax
+    pop  rax
     pop  r11
     pop  r10
-    pop  r11
     inc  r10
     cmp  r10, [con_num]
     jne input_table_S
@@ -239,13 +248,14 @@ input_table_2:
     mov r11, 1
     add r11, [var_num]
     add r11, [con_num]
-    push r11
-    push r10
-    push rax
-    call set_by_index
+    ; push r11
+    ; push r10
+    ; push rax
+    ; call set_by_index
+    set r11, r10, rax
     pop  rax
-    pop  r10
     pop  r11
+    pop  r10
 
     inc r10
     cmp r10, [con_num]
@@ -264,13 +274,14 @@ input_table_3:
 
     mov r11, 0
     add r11, [con_num]
-    push r10
-    push r11
-    push rax
-    call set_by_index
+    ; push r10
+    ; push r11
+    ; push rax
+    ; call set_by_index
+    set r10, r11, rax
     pop  rax
-    pop  r11
     pop  r10
+    pop  r11
 
     inc r10
     cmp r10, [var_num]
@@ -284,33 +295,33 @@ find_pivot_column:
   sub rsp, 0x10
   xor r8, r8
 
-  push 0
-  push QWORD [con_num]
-  call get_by_index
-  mov [rbp-0x08], rax
+  get 0, QWORD [con_num]
+  mov r12, rax
 
   xor r10, r10
   find_pivot_column_loop:
-    mov  r11, r10
-    add  r11, [con_num]
-    push r10
-    push r11
-    call get_by_index
-    pop  r11
+    mov  r11, [con_num]
+    ; push r10
+    ; push r11
+    ; call get_by_index
+    push r12
+    get r10, r11
     pop  r10
+    pop  r11
+    pop  r12
 
-    push QWORD [rsp-0x08]
+    push r12
     fld  QWORD [rsp]
     pop  rbx
     push rax
     fld  QWORD [rsp]
     pop  rax
 
-    fcomp
-    jg find_pivot_column_loop_greater
-    mov rbx, rax
+    fcompp
+    jbe find_pivot_column_loop_less
+    mov r12, rax
     mov r8, r10
-    find_pivot_column_loop_greater:
+    find_pivot_column_loop_less:
 
     inc r10
     cmp r10, [var_num]
