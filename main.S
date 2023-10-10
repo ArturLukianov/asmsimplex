@@ -50,8 +50,8 @@ _start:
   ; pop rax
   ; call free
 
-  push rax
-  call read_line_into_float
+  ; push rax
+  ; call read_line_into_float
 
   push rax
   call print_float

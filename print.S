@@ -106,14 +106,14 @@ print_float:
 	mov  rax, 10
 	push  rax
 	fild QWORD [rsp]
-	fmul ST0, ST1
+	fmulp
 	fst  QWORD [rsp]
 	fld  QWORD [rsp]
 	fisttp QWORD [rsp]
 	pop rdx
 	lea r8, [rdx+0x30]
 	mov BYTE [r9], r8b
-	cmp QWORD [rbp-0x09], 128
+	cmp QWORD [rbp-0x09], 15
 	jge print_float_frac_loop_end
 	ftst
 	inc r9
@@ -121,7 +121,9 @@ print_float:
 	fld1
 	fxch ST0, ST1
 	fprem
-	jne print_float_frac_loop_begin
+	fxch
+	fstp QWORD [rsp]
+	jnz print_float_frac_loop_begin
 	print_float_frac_loop_end:
 
 	; while ([r9] == 0x30): r9--
