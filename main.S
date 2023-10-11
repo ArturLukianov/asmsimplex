@@ -73,7 +73,8 @@ debug_simplex_label:
   mov rsi, 3
   mov rdx, 3
   call find_pivot_row
-  call print_int
+
+  call print_float
 
 exit:
 	mov rax, 60

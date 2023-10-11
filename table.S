@@ -6,6 +6,8 @@ section .bss
   columns_count resq 1
   var_num resq 1    ; Number of variables
   con_num resq 1    ; Number of constraints
+  pivot_column resq 1     ; pivot column index 
+  min_ratio resq 1     ; min_ratio value 
   
 section .text
   global get_by_index
@@ -281,7 +283,7 @@ input_table_3:
     pop  r10
     pop  r11
 
-    inc r10
+    inc r10 
     cmp r10, [var_num]
     jne input_table_C
 
@@ -332,21 +334,25 @@ find_pivot_column:
   mov rax, r8
 
   epilogue
+
 ; find_pivot_row(int m, int n, int pivot_col)
 find_pivot_row:
     ; Arguments: rdi = m, rsi = n, rdx = pivot_col
     prologue
     push r9
     ; Initialize variables
-    xor r10, r10             ; i
-    mov r11, [FLOAT_NEGATIVE]         ; min_ratio
-    ; fld QWORD [FLOAT_ZERO]            ; 
-    dec rsi                           ; last element in the row is b_i
-
+    xor r10, r10                      ; i
+    ; mov r11, [FLOAT_NEGATIVE]       ; min_ratio
+    ; fld QWORD [FLOAT_ZERO]          ; 
+    mov rsi, [columns_count]          ; last element in the row is b_i
+    dec rsi
+    dec rdx
+    mov [pivot_column], rdx
+    fld QWORD [FLOAT_NEGATIVE]
+    fst QWORD [min_ratio]
     fldz                              ; push +0.0 onto the FPU register stack
     ; Loop through rows
 find_pivot_row_loop:
-    inc r10                  ; i++
     cmp r10, rdi             ; Compare i with m
     jge find_pivot_row_done  ; Jump to find_pivot_row_done if i >= m
 
@@ -362,6 +368,7 @@ find_pivot_row_loop:
     fld QWORD [rbp+0x10]      ; st0 = r9
     
     ; table[i][pivot_col]
+    mov rdx, [pivot_column]
     push r10
     push rdx
     call get_by_index
@@ -377,20 +384,40 @@ find_pivot_row_loop:
     fcom st2                  ; compare st0 and st2
     jz find_pivot_row_loop
     fdivr st0, st1            ; Divide ST(i) by ST(0) and store result in ST(0)  
-                              ; ratio = table[i][0] / table[i][pivot_col] (!)
-    ; (ratio > 0 && ration < min_ration) || min_ration < 0
-    fcom st2                  ; FCOM ST(i) Compare ST(0) with ST(i).
-    jl min_ration_negative
-    mov [rbp+0x10], r11       ; r9 = min_ratio
-    fld QWORD [rbp+0x10]      ; st0=min_ratio | st1=ratio
-    fcom st1
-    jl min_ration_negative
-    fld st0                   ; st0 = min_ratio = ratio
+                              ; s0 = ratio = table[i][0] / table[i][pivot_col] (!)
+    ; (ratio > 0 && ration < min_ratio) || min_ratio < 0
+    mov QWORD [rbp+0x10], min_ratio  ; taking the min_ratio (by default = -1)
+    fld QWORD [rbp+0x10]          ; pushing onto the stack
+    ; st0 = min_ratio, st1=ratio
+    fcom st1                  ; FCOM ST(i) -> Compare ST(0) with ST(i). min_ratio > ratio?
+    jl loop_condition_with_min_ratio
+    ; min_ratio > ratio => check if ratio > 0
+    fldz
+    ; st0 = 0.0, st1 =min_ratio, st2=ratio
+    fcom st2 ; 0.0 ? ratio
+    jg find_pivot_row_loop_done
+    ; mov QWORD [min_ratio], st2 --invalid construction
+    fld st2 ; st0=st2
+    fst QWORD [min_ratio] ; min_ratio = st0
     mov r9, r10               ; pivot_row = i
+find_pivot_row_loop_done:
+    inc r10                   ; i++
     jmp find_pivot_row_loop
-min_ration_negative: 
+loop_condition_with_min_ratio:
+  fldz
+  ; st0 = 0.0   st1 = min_ratio   st2 = ratio
+  ; if (min_ratio < 0) | st0 ? st1
+  fcom st1
+  jl find_pivot_row_loop_done
+  ; mov [min_ratio], st2
+  fld st2 ; st0=st2
+  fst QWORD [min_ratio] ; min_ratio = st0
+  mov r9, r10
+  jmp find_pivot_row_loop_done
+
+loop_if_content: 
     ; Update min_ratio and pivot_row
-    mov r11, r8              ; min_ratio = ratio
+    mov [min_ratio], r8              ; min_ratio = ratio
     mov r9, r10              ; pivot_row = i
     jmp find_pivot_row_loop
 
@@ -408,6 +435,7 @@ find_pivot_row_done:
 
     ; Return pivot_row
     mov rax, r9
+    
     epilogue
 
 find_pivot_row_unbounded:
