@@ -28,6 +28,7 @@ check_b_positive:
 
   xor rcx, rcx        ; Initialize loop counter (i)
   xor r8, r8
+  dec rdi
   ; fld1
   ; xor st0, st0
   ; fld qword [r9]

@@ -18,6 +18,7 @@ section .text
   global input_table_2
   global input_table_3
   global find_pivot_column
+  global find_pivot_row
 
 extern malloc
 
@@ -321,7 +322,7 @@ find_pivot_column:
   epilogue
 ; find_pivot_row(int m, int n, int pivot_col)
 find_pivot_row:
-    ; Arguments: rdi = m, rsi = n, rdx = pivot_col, rcx = table
+    ; Arguments: rdi = m, rsi = n, rdx = pivot_col
     prologue
     push r9
     ; Initialize variables

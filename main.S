@@ -29,6 +29,7 @@ extern input_table_1
 extern input_table_2
 extern input_table_3
 extern find_pivot_column
+extern find_pivot_row
 
 ; input.S
 extern read_float
@@ -68,7 +69,11 @@ _start:
   call check_b_positive
   ; mov rdi, 3
   ; call check_b_positive
-  call find_pivot_column
+  ; call find_pivot_column
+  mov rdi, 3
+  mov rsi, 3
+  mov rdx, 3
+  call find_pivot_row
   call print_int
 
 exit:
