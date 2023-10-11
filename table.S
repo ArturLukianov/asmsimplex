@@ -342,14 +342,15 @@ find_pivot_row:
     push r9
     ; Initialize variables
     xor r10, r10                      ; i
+    xor r11, r11                      ; i
     ; mov r11, [FLOAT_NEGATIVE]       ; min_ratio
     ; fld QWORD [FLOAT_ZERO]          ; 
     mov rsi, [columns_count]          ; last element in the row is b_i
     dec rsi
     dec rdx
     mov [pivot_column], rdx
-    fld QWORD [FLOAT_NEGATIVE]
-    fst QWORD [min_ratio]
+    fld QWORD [FLOAT_NEGATIVE]  ;s0=-1.0
+    fst QWORD [min_ratio]       ;min_ratio-st0
     fldz                              ; push +0.0 onto the FPU register stack
     ; Loop through rows
 find_pivot_row_loop:
@@ -386,8 +387,8 @@ find_pivot_row_loop:
     fdivr st0, st1            ; Divide ST(i) by ST(0) and store result in ST(0)  
                               ; s0 = ratio = table[i][0] / table[i][pivot_col] (!)
     ; (ratio > 0 && ration < min_ratio) || min_ratio < 0
-    mov QWORD [rbp+0x10], min_ratio  ; taking the min_ratio (by default = -1)
-    fld QWORD [rbp+0x10]          ; pushing onto the stack
+    ; mov QWORD [rbp+0x10], min_ratio  ; taking the min_ratio (by default = -1)
+    fld QWORD [min_ratio]          ; pushing onto the stack
     ; st0 = min_ratio, st1=ratio
     fcom st1                  ; FCOM ST(i) -> Compare ST(0) with ST(i). min_ratio > ratio?
     jl loop_condition_with_min_ratio
@@ -399,7 +400,7 @@ find_pivot_row_loop:
     ; mov QWORD [min_ratio], st2 --invalid construction
     fld st2 ; st0=st2
     fst QWORD [min_ratio] ; min_ratio = st0
-    mov r9, r10               ; pivot_row = i
+    mov r11, r10               ; pivot_row = i
 find_pivot_row_loop_done:
     inc r10                   ; i++
     jmp find_pivot_row_loop
@@ -412,33 +413,34 @@ loop_condition_with_min_ratio:
   ; mov [min_ratio], st2
   fld st2 ; st0=st2
   fst QWORD [min_ratio] ; min_ratio = st0
-  mov r9, r10
+  mov r11, r10
   jmp find_pivot_row_loop_done
 
 loop_if_content: 
     ; Update min_ratio and pivot_row
     mov [min_ratio], r8              ; min_ratio = ratio
-    mov r9, r10              ; pivot_row = i
+    mov r11, r10              ; pivot_row = i
     jmp find_pivot_row_loop
 
 find_pivot_row_done:
     
     ; Check if min_ratio is still -1.0 (indicating unbounded)
-    push r8
+    ; push r8
     ; mov r8, 
-    mov [rbp+0x10], r11
+    ; mov [rbp+0x10], r11
     ; mov [rbp+0x18], r8
-    fld QWORD [rbp+0x10] 
+    ; fld QWORD [rbp+0x10] 
     fld QWORD [FLOAT_NEGATIVE] 
     fcom st3
     je find_pivot_row_unbounded
-
+    ; pop r8
     ; Return pivot_row
-    mov rax, r9
-    
+    mov rax, r11
+    pop r9
     epilogue
 
 find_pivot_row_unbounded:
     ; Return -1
     mov rax, -1
+    pop r9
     epilogue
